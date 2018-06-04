@@ -21,7 +21,8 @@
 </div>
 
 <div class="login-box side-form">
-  <form class="form-validation">
+  <form class="form-validation"  action="/login/login" method="post">
+    <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
     <div class="form-group">
       <input type="text" class="input-sm validate[required,custom[email]] form-control" placeholder="Email Address">
     </div>
