@@ -5,7 +5,7 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :password
       t.string :email
       t.string :city
-      t.string :programLanguagestring
+      t.string :programLanguage
       t.string :team
       t.string :phone
 
