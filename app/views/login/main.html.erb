@@ -74,6 +74,20 @@
       opacity: 0.8;
     }
   </style>
+
+
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+      new Vue({
+          el: '#app',
+          data: function() {
+              return { visible: false }
+          }
+      })
+  </script>
 </head>
 <body>
 <!-- Header -->
@@ -127,7 +141,12 @@
   <!-- Content -->
   <section id="content" class="container">
 
-    <h1>欢迎</h1>
+    <div id="app">
+      <el-button @click="visible = true">Button</el-button>
+      <el-dialog :visible.sync="visible" title="Hello world">
+        <p>Try Element</p>
+      </el-dialog>
+    </div>
   </section>
 </section>
 
@@ -215,10 +234,10 @@
 <script src="/js/sparkline.min.js"></script>
 <script src="/js/masonry.min.js"></script>
 <script src="/js/enscroll.min.js"></script>
-<script src='js/calendar.min.js'></script>
-<script src='js/datatables.min.js'></script>
-<script src='js/autosize.min.js'></script>
-<script src='js/select.min.js'></script>
+<script src='/js/calendar.min.js'></script>
+<script src='/js/datatables.min.js'></script>
+<script src='/js/autosize.min.js'></script>
+<script src='/js/select.min.js'></script>
 <script src="/js/toggler.min.js"></script>
 <script src="/js/datetimepicker.min.js"></script>
 <script src="/js/colorpicker.min.js"></script>
@@ -342,6 +361,15 @@
         });
     });
 
+</script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return { visible: false }
+        }
+    })
 </script>
 </body>
 </html>

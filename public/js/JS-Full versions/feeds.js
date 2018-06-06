@@ -5,7 +5,7 @@
 ;
     t&&e.extend(i, t);
     var n, a=e(this).attr("id");
-    e("#"+a).empty().append('<img class="loader" src="img/loader.gif" alt=""/>'), e.ajax( {
+    e("#"+a).empty().append('<img class="loader" src="/img/loader.gif" alt=""/>'), e.ajax( {
     url: "http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num="+i.MaxCount+"&output=json&q="+encodeURIComponent(i.FeedUrl)+"&hl=en&callback=?", dataType:"json", success:function(t) {
     e("#"+a).empty();
     var s="";

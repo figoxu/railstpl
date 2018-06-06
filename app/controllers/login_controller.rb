@@ -3,7 +3,7 @@ class LoginController < ApplicationController
   end
 
   def login
-    render 'main'
+    redirect_to login_main_path
   end
 
   def main
