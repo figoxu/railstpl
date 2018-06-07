@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
 
   get 'vusers/default'
-  get "vusers.json", to:'vusers#list'
+  get "vusers/list/:pgno", to:'vusers#list'
   # For details on the DSL
   # available within this file, see http://guides.rubyonrails.org/routing.html
 end

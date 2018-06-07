@@ -22,20 +22,38 @@
     label="电子邮件">
     </el-table-column>
   </el-table>
+  <div class="block">
+    <el-pagination
+    layout="prev, pager, next"
+    @current-change="pg_change"
+    :page-count="totalPg">
+    </el-pagination>
+  </div>
 </div>
+
 
 <script type="text/javascript">
 
-    vm=new Vue({
+    vm = new Vue({
         el: '#app',
         data: {
             visible: false,
+            totalPg: 0,
             tableData: []
         },
         created: function () {
-            this.$http.get('/vusers.json').then(function(response){
-               vm.tableData = response.data
-            });
+            this.pg_change(1)
+        },
+
+        methods: {
+            pg_change: function (pg) {
+                that=this
+                this.$http.get('/vusers/list/' + pg).then(function (response) {
+                    var d = response.data;
+                    that.tableData = d.data;
+                    that.totalPg = d.totalPg;
+                });
+            }
         }
     });
 
