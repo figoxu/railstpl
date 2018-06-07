@@ -29,17 +29,4 @@ ActiveRecord::Schema.define(version: 20180606224556) do
     t.string "avatar"
   end
 
-  for i in 1..100
-    user = User.new
-    user.name = Faker::Name.name
-    user.password = "123456"
-    user.email = Faker::Internet.email
-    user.city = Faker::Address.city
-    user.programLanguage = Faker::ProgrammingLanguage.name
-    user.team = Faker::Team.name
-    user.phone = Faker::PhoneNumber.phone_number
-    user.avatar = Faker::Avatar.image
-    user.gender = Faker::Boolean.boolean ? "Male" : "Female"
-    user.save
-  end
 end
