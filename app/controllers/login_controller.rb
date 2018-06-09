@@ -6,7 +6,7 @@ class LoginController < ApplicationController
   end
 
   def login
-    redirect_to users_path
+    redirect_to vusers_default_path
   end
 
 end

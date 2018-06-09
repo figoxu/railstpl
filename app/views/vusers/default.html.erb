@@ -4,7 +4,41 @@
     <p>Try Element</p>
   </el-dialog>
 
-  <%= grid()%>
+  <el-table :data="tableData" style="width: 100%">
+    <el-table-column prop="id" label="id" width="180"></el-table-column>
+    <el-table-column prop="name" label="name" width="180"></el-table-column>
+    <el-table-column prop="password" label="password" width="100"></el-table-column>
+    <el-table-column prop="email" label="email" width="230"></el-table-column>
+    <el-table-column prop="city" label="city" width="180"></el-table-column>
+    <el-table-column prop="programLanguage" label="programLanguage" width="180">
+
+    </el-table-column><el-table-column prop="team" label="team" width="180"></el-table-column>
+    <el-table-column prop="phone" label="phone" width="180"></el-table-column>
+    <el-table-column prop="created_at" label="created_at" width="200"></el-table-column>
+    <el-table-column prop="updated_at" label="updated_at" width="200"></el-table-column>
+    <el-table-column prop="gender" label="gender" width="180"></el-table-column>
+    <el-table-column  label="avatar" width="180">
+      <template slot-scope="scope">
+
+        <img :src='scope.row.avatar' width="30" height="30"/>
+      </template>
+    </el-table-column>
+
+    <el-table-column
+    fixed="right"
+    label="操作"
+    width="100">
+
+      <template slot-scope="scope">
+        <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+        <el-button type="text" size="small">编辑</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+
+
+
+  
   <div class="block">
     <el-pagination
     layout="prev, pager, next"
