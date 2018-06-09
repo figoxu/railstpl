@@ -4,8 +4,8 @@
     <el-button type="primary" size="mini" icon="el-icon-plus"></el-button>
   </el-tooltip>
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="id" label="id" width="180"></el-table-column>
-    <el-table-column prop="name" label="name" width="180"></el-table-column>
+    <el-table-column prop="id" fixed label="id" width="80"></el-table-column>
+    <el-table-column prop="name" fixed label="name" width="180"></el-table-column>
     <el-table-column prop="password" label="password" width="100"></el-table-column>
     <el-table-column prop="email" label="email" width="230"></el-table-column>
     <el-table-column prop="city" label="city" width="180"></el-table-column>
@@ -15,7 +15,7 @@
     <el-table-column prop="created_at" label="created_at" width="200"></el-table-column>
     <el-table-column prop="updated_at" label="updated_at" width="200"></el-table-column>
     <el-table-column prop="gender" label="gender" width="180"></el-table-column>
-    <el-table-column  label="avatar" width="180">
+    <el-table-column label="avatar" width="180">
       <template slot-scope="scope">
         <img :src='scope.row.avatar' width="30" height="30"/>
       </template>
@@ -25,21 +25,19 @@
 
       <template slot-scope="scope">
         <el-tooltip class="item" effect="dark" content="查看记录详情" placement="left">
-          <el-button type="success"  size="mini" icon="el-icon-view" circle></el-button>
+          <el-button type="success" size="mini" icon="el-icon-view" circle></el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="编辑记录内容" placement="top">
           <el-button type="primary" size="mini" icon="el-icon-edit" circle></el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="删除此条记录" placement="right">
-          <el-button type="danger"  size="mini" icon="el-icon-delete" circle></el-button>
+          <el-button @click="row_del(scope.row)" type="danger" size="mini" icon="el-icon-delete" circle></el-button>
         </el-tooltip>
       </template>
     </el-table-column>
   </el-table>
 
 
-
-  
   <div class="block">
     <el-pagination
     layout="prev, pager, next"
@@ -49,25 +47,65 @@
   </div>
 </div>
 
+<%= tag(:input, :type => "hidden",:id =>'vue_cxrf', :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
 
 <script type="text/javascript">
+    Vue.http.interceptors.push({
+        request: function (request) {
+            alert( $('#vue_cxrf').attr('value'))
+            Vue.http.headers.common['X-CSRF-Token'] = $('#vue_cxrf').attr('value');
+            return request;
+        },
+        response: function (response) {
+            return response;
+        }
+    });
+
     vm = new Vue({
         el: '#app',
         data: {
             visible: false,
             totalPg: 0,
+            currentPg:1,
             tableData: []
         },
         created: function () {
-            this.pg_change(1)
+            this.pg_change(this.currentPg)
         },
         methods: {
             pg_change: function (pg) {
-                that=this
+                this.currentPg = pg
+                that = this
                 this.$http.get('/vusers/list/' + pg).then(function (response) {
                     var d = response.data;
                     that.tableData = d.data;
                     that.totalPg = d.totalPg;
+                });
+            },
+            row_del: function (row) {
+                that = this
+                this.$confirm('此操作将永久删除'+row.name+', 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(function () {
+                    that.$http({
+                        url: "/vusers/"+row.id,
+                        method: 'DELETE',
+                        data: {},
+                        headers: {
+                            'X-CSRF-Token': $('#vue_cxrf').attr('value'),
+                        }
+                    }).then(function () {
+                        this.pg_change(this.currentPg)
+                    }, function () {
+                        // 请求失败回调
+                    });
+
+
+                }).catch(function () {
+                    console.log("取消删除")
                 });
             }
         }
