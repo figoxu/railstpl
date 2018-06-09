@@ -1,35 +1,38 @@
 <div id="app">
 
-  <el-button type="primary" size="mini" icon="el-icon-plus">添加记录</el-button>
+  <el-tooltip class="item" effect="dark" content="创建一条记录" placement="right">
+    <el-button type="primary" size="mini" icon="el-icon-plus"></el-button>
+  </el-tooltip>
   <el-table :data="tableData" style="width: 100%">
     <el-table-column prop="id" label="id" width="180"></el-table-column>
     <el-table-column prop="name" label="name" width="180"></el-table-column>
     <el-table-column prop="password" label="password" width="100"></el-table-column>
     <el-table-column prop="email" label="email" width="230"></el-table-column>
     <el-table-column prop="city" label="city" width="180"></el-table-column>
-    <el-table-column prop="programLanguage" label="programLanguage" width="180">
-
-    </el-table-column><el-table-column prop="team" label="team" width="180"></el-table-column>
+    <el-table-column prop="programLanguage" label="programLanguage" width="180"></el-table-column>
+    <el-table-column prop="team" label="team" width="180"></el-table-column>
     <el-table-column prop="phone" label="phone" width="180"></el-table-column>
     <el-table-column prop="created_at" label="created_at" width="200"></el-table-column>
     <el-table-column prop="updated_at" label="updated_at" width="200"></el-table-column>
     <el-table-column prop="gender" label="gender" width="180"></el-table-column>
     <el-table-column  label="avatar" width="180">
       <template slot-scope="scope">
-
         <img :src='scope.row.avatar' width="30" height="30"/>
       </template>
     </el-table-column>
 
-    <el-table-column
-    fixed="right"
-    label="操作"
-    width="160">
+    <el-table-column fixed="right" label="操作" width="160">
 
       <template slot-scope="scope">
-        <el-button type="success"  size="mini" icon="el-icon-view" circle></el-button>
-        <el-button type="primary" size="mini" icon="el-icon-edit" circle></el-button>
-        <el-button type="danger"  size="mini" icon="el-icon-delete" circle></el-button>
+        <el-tooltip class="item" effect="dark" content="查看记录详情" placement="left">
+          <el-button type="success"  size="mini" icon="el-icon-view" circle></el-button>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="编辑记录内容" placement="top">
+          <el-button type="primary" size="mini" icon="el-icon-edit" circle></el-button>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="删除此条记录" placement="right">
+          <el-button type="danger"  size="mini" icon="el-icon-delete" circle></el-button>
+        </el-tooltip>
       </template>
     </el-table-column>
   </el-table>
