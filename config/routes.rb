@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'vusers/default'
   get "vusers/list/:pgno", to: 'vusers#list'
   delete 'vusers/:id', to: "vusers#destroy"
+  post "vusers",to: "vusers#create"
   # For details on the DSL
   # available within this file, see http://guides.rubyonrails.org/routing.html
 end

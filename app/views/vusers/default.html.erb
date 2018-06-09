@@ -1,7 +1,7 @@
 <div id="app">
 
   <el-tooltip class="item" effect="dark" content="创建一条记录" placement="right">
-    <el-button type="primary" size="mini" icon="el-icon-plus"></el-button>
+    <el-button type="primary" @click="createFlag = true" size="mini" icon="el-icon-plus"></el-button>
   </el-tooltip>
   <el-table :data="tableData" style="width: 100%">
     <el-table-column prop="id" fixed label="id" width="80"></el-table-column>
@@ -12,8 +12,6 @@
     <el-table-column prop="programLanguage" label="programLanguage" width="180"></el-table-column>
     <el-table-column prop="team" label="team" width="180"></el-table-column>
     <el-table-column prop="phone" label="phone" width="180"></el-table-column>
-    <el-table-column prop="created_at" label="created_at" width="200"></el-table-column>
-    <el-table-column prop="updated_at" label="updated_at" width="200"></el-table-column>
     <el-table-column prop="gender" label="gender" width="180"></el-table-column>
     <el-table-column label="avatar" width="180">
       <template slot-scope="scope">
@@ -45,29 +43,70 @@
     :page-count="totalPg">
     </el-pagination>
   </div>
+
+  <el-dialog
+  title="创建数据"
+  :visible.sync="createFlag"
+  width="30%">
+    <span>
+
+      <el-form :model="create" :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+        <el-form-item label="name">
+          <el-input  v-model="create.name"></el-input>
+        </el-form-item>
+        <el-form-item label="password">
+          <el-input  v-model="create.password"></el-input>
+        </el-form-item>
+        <el-form-item label="email">
+          <el-input  v-model="create.email"></el-input>
+        </el-form-item>
+      </el-form>
+    </span>
+    <span slot="footer" class="dialog-footer">
+    <el-button @click="createFlag = false">取 消</el-button>
+    <el-button type="primary" @click="add">确 定</el-button>
+  </span>
+  </el-dialog>
+
+
 </div>
 
-<%= tag(:input, :type => "hidden",:id =>'vue_cxrf', :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+<%= tag(:input, :type => "hidden", :id => 'vue_cxrf', :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
 
 <script type="text/javascript">
-    Vue.http.interceptors.push({
-        request: function (request) {
-            alert( $('#vue_cxrf').attr('value'))
-            Vue.http.headers.common['X-CSRF-Token'] = $('#vue_cxrf').attr('value');
-            return request;
-        },
-        response: function (response) {
-            return response;
-        }
-    });
-
     vm = new Vue({
         el: '#app',
         data: {
             visible: false,
             totalPg: 0,
-            currentPg:1,
-            tableData: []
+            currentPg: 1,
+            tableData: [],
+            createFlag: false,
+            create: {
+                name: '',
+                password: '',
+                email: '',
+                city: '',
+                programLanguage: '',
+                team: '',
+                phone: '',
+                gender: '',
+                avatar: ''
+            },
+            modify:{
+                id: 0,
+                name: '',
+                password: '',
+                email: '',
+                city: '',
+                programLanguage: '',
+                team: '',
+                phone: '',
+                created_at: '',
+                updated_at: '',
+                gender: '',
+                avatar: ''
+            }
         },
         created: function () {
             this.pg_change(this.currentPg)
@@ -84,14 +123,14 @@
             },
             row_del: function (row) {
                 that = this
-                this.$confirm('此操作将永久删除'+row.name+', 是否继续?', '提示', {
+                this.$confirm('此操作将永久删除' + row.name + ', 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning',
                     center: true
                 }).then(function () {
                     that.$http({
-                        url: "/vusers/"+row.id,
+                        url: "/vusers/" + row.id,
                         method: 'DELETE',
                         data: {},
                         headers: {
@@ -106,6 +145,23 @@
 
                 }).catch(function () {
                     console.log("取消删除")
+                });
+            },
+            add:function () {
+
+                this.dialogVisible = false
+                vuserData = JSON.parse( JSON.stringify(this.create));
+                console.log(vuserData)
+                this.$http({
+                    url: "/vusers",
+                    method: 'POST',
+                    body: {
+                        "vuser":vuserData,
+                    },
+                    // body: vuserData,
+                    headers: {
+                        'X-CSRF-Token': $('#vue_cxrf').attr('value'),
+                    }
                 });
             }
         }

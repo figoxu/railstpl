@@ -25,4 +25,12 @@ class VusersController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def create
+    @user = User.new(params[:vuser].permit(:name, :password, :email, :city, :programLanguage, :team, :phone, :gender, :avatar))
+    @user.save
+    respond_to do |format|
+      format.json { head :no_content }
+    end
+  end
 end
