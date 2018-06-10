@@ -26,7 +26,7 @@
           <el-button type="success" size="mini" icon="el-icon-view" circle></el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="编辑记录内容" placement="top">
-          <el-button type="primary" size="mini" icon="el-icon-edit" circle></el-button>
+          <el-button type="primary" @click="row_editor(scope.row)" size="mini" icon="el-icon-edit" circle></el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="删除此条记录" placement="right">
           <el-button @click="row_del(scope.row)" type="danger" size="mini" icon="el-icon-delete" circle></el-button>
@@ -69,6 +69,30 @@
   </el-dialog>
 
 
+  <el-dialog
+  title="修改数据"
+  :visible.sync="modifyFlag"
+  width="50%">
+    <span>
+
+      <el-form :model="modify" :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+        <el-form-item label="name">
+          <el-input  v-model="modify.name"></el-input>
+        </el-form-item>
+        <el-form-item label="password">
+          <el-input  v-model="modify.password"></el-input>
+        </el-form-item>
+        <el-form-item label="email">
+          <el-input  v-model="modify.email"></el-input>
+        </el-form-item>
+      </el-form>
+    </span>
+    <span slot="footer" class="dialog-footer">
+    <el-button @click="modifyFlag = false">取 消</el-button>
+    <el-button type="primary" @click="edit">确 定</el-button>
+  </span>
+  </el-dialog>
+
 </div>
 
 <%= tag(:input, :type => "hidden", :id => 'vue_cxrf', :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
@@ -82,6 +106,7 @@
             currentPg: 1,
             tableData: [],
             createFlag: false,
+            modifyFlag:false,
             create: {
                 name: '',
                 password: '',
@@ -121,6 +146,10 @@
                     that.totalPg = d.totalPg;
                 });
             },
+            row_editor:function(row){
+                this.modify = JSON.parse( JSON.stringify(row));
+                this.modifyFlag = true;
+            },
             row_del: function (row) {
                 that = this
                 this.$confirm('此操作将永久删除' + row.name + ', 是否继续?', '提示', {
@@ -148,20 +177,35 @@
                 });
             },
             add:function () {
-
-                this.dialogVisible = false
+                this.createFlag = false
                 vuserData = JSON.parse( JSON.stringify(this.create));
-                console.log(vuserData)
                 this.$http({
                     url: "/vusers",
                     method: 'POST',
                     body: {
                         "vuser":vuserData,
                     },
-                    // body: vuserData,
                     headers: {
                         'X-CSRF-Token': $('#vue_cxrf').attr('value'),
                     }
+                });
+            },
+            edit:function () {
+                this.modifyFlag=false
+                vuserData = JSON.parse( JSON.stringify(this.modify));
+                this.$http({
+                    url: "/vusers",
+                    method: 'PUT',
+                    body: {
+                        "vuser":vuserData,
+                    },
+                    headers: {
+                        'X-CSRF-Token': $('#vue_cxrf').attr('value'),
+                    }
+                }).then(function () {
+                    this.pg_change(this.currentPg)
+                }, function () {
+                    // 请求失败回调
                 });
             }
         }

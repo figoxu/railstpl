@@ -22,7 +22,7 @@ class VusersController < ApplicationController
     @user = User.find(params[:id])
     @user.destroy
     respond_to do |format|
-      format.json { head :no_content }
+      format.json {head :no_content}
     end
   end
 
@@ -30,7 +30,16 @@ class VusersController < ApplicationController
     @user = User.new(params[:vuser].permit(:name, :password, :email, :city, :programLanguage, :team, :phone, :gender, :avatar))
     @user.save
     respond_to do |format|
-      format.json { head :no_content }
+      format.json {head :no_content}
+    end
+  end
+
+  def modify
+    @user = User.find(params[:vuser][:id])
+    user_params = params.require(:vuser).permit( :name, :password, :email, :city, :programLanguage, :team, :phone, :gender, :avatar)
+    @user.update(user_params)
+    respond_to do |format|
+      format.json {head :no_content}
     end
   end
 end
